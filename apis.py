@@ -24,7 +24,7 @@ app.add_middleware(
 
 class BaseResponse(BaseModel):
     predict: bool = False
-    processed_frame: Union[np.ndarray, None] = None
+    processed_frame: Union[type[np.ndarray], None] = None
 
 
 @app.get('/')
@@ -33,7 +33,7 @@ def root():
 
 
 @app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
-async def detect_fire(frame: np.ndarray = Body('The frame to be proccessed')):
+def detect_fire(frame: type[np.ndarray] = Body(description='The frame to be proccessed')):
     prediction: bool = predict(frame)
 
     return BaseResponse(
