@@ -25,7 +25,7 @@ class BaseResponse(BaseModel):
 
 @my_app.get('/', tags=['Root'])
 def root():
-    return {"message": "hello world!"}
+    return {"message": "hello world!mm"}
 
 
 @my_app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
