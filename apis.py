@@ -2,7 +2,7 @@ from typing import Union
 from fastapi import Body, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from fire_detection_model import predict_fire
+from fire_detection_model2 import predict
 import numpy as np
 
 tags_metadata = [
@@ -34,7 +34,7 @@ def root():
 
 @app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
 async def detect_fire(frame: np.ndarray = Body('The frame to be proccessed')):
-    prediction: bool = predict_fire(frame)
+    prediction: bool = predict(frame)
 
     return BaseResponse(
         predict=prediction,
