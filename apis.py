@@ -5,15 +5,11 @@ from pydantic import BaseModel
 from fire_detection_model2 import predict
 import numpy as np
 
-tags_metadata = [
-    {"name": "Models", "description": "AI Models endpoints"}
-]
-
-app = FastAPI(openapi_tags=tags_metadata)
+my_app = FastAPI()
 
 origins = ["*"]
 
-app.add_middleware(
+my_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
@@ -27,12 +23,12 @@ class BaseResponse(BaseModel):
     processed_frame: Union[type[np.ndarray], None] = None
 
 
-@app.get('/')
+@my_app.get('/', tags=['Root'])
 def root():
     return {"message": "hello world!"}
 
 
-@app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
+@my_app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
 def detect_fire(frame: type[np.ndarray] = Body(description='The frame to be proccessed')):
     prediction: bool = predict(frame)
 
