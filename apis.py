@@ -5,11 +5,7 @@ from pydantic import BaseModel
 from fire_detection_model2 import predict
 import numpy as np
 
-tags_metadata = [
-    {"name": "Models", "description": "AI Models endpoints"}
-]
-
-app = FastAPI(openapi_tags=tags_metadata)
+app = FastAPI()
 
 origins = ["*"]
 
@@ -27,7 +23,7 @@ class BaseResponse(BaseModel):
     processed_frame: Union[type[np.ndarray], None] = None
 
 
-@app.get('/')
+@app.get('/', tags=['Root'])
 def root():
     return {"message": "hello world!"}
 
