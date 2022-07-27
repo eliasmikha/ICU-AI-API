@@ -22,11 +22,12 @@ my_app.add_middleware(
     allow_headers=["*"],
 )
 
+class FrameInput(BaseModel):
+    frame: list[list[list[int]]]
 
 class BaseResponse(BaseModel):
     predict: bool = False
-    processed_frame: list[float]
-
+    processed_frame: FrameInput
 
 
 @my_app.get('/', tags=['Root'])
@@ -35,10 +36,10 @@ def root():
 
 
 @my_app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
-def detect_fire(frame: list[float] = Body(description='The frame to be proccessed')):
-    prediction: bool = predict(frame)
+def detect_fire(frameIn: FrameInput = Body(description='The frame to be proccessed')):
+    prediction: bool = predict(frameIn.frame)
 
     return BaseResponse(
         predict=prediction,
-        processed_frame=frame,
+        processed_frame=frameIn.frame,
     )
