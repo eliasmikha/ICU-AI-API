@@ -6,7 +6,7 @@ from fire_detection_model2 import predict
 import numpy as np
 
 tags_metadata = [
-    {"name": "Model", "description": "The AI models endpoint"},
+    {"name": "Models", "description": "The AI models endpoint"},
     {"name": "Root"}
 ]
 
@@ -25,10 +25,8 @@ my_app.add_middleware(
 
 class BaseResponse(BaseModel):
     predict: bool = False
-    processed_frame: np.ndarray = Field(default_factory=lambda: np.zeros(10))
+    processed_frame: list[float]
 
-    class Config:
-        arbitrary_types_allowed = True
 
 
 @my_app.get('/', tags=['Root'])
@@ -37,7 +35,7 @@ def root():
 
 
 @my_app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
-def detect_fire(frame: np.ndarray = Body(description='The frame to be proccessed')):
+def detect_fire(frame: list[float] = Body(description='The frame to be proccessed')):
     prediction: bool = predict(frame)
 
     return BaseResponse(
