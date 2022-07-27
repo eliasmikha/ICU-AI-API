@@ -1,7 +1,7 @@
 from typing import Union
 from fastapi import Body, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fire_detection_model2 import predict
 import numpy as np
 
@@ -25,7 +25,10 @@ my_app.add_middleware(
 
 class BaseResponse(BaseModel):
     predict: bool = False
-    processed_frame: Union[np.ndarray, None] = None
+    processed_frame: np.ndarray = Field(default_factory=lambda: np.zeros(10))
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 @my_app.get('/', tags=['Root'])
