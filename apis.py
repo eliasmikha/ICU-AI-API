@@ -5,7 +5,12 @@ from pydantic import BaseModel
 from fire_detection_model2 import predict
 import numpy as np
 
-my_app = FastAPI()
+tags_metadata = [
+    {"name": "Model", "description": "The AI models endpoint"},
+    {"name": "Root"}
+]
+
+my_app = FastAPI(openapi_tags=tags_metadata)
 
 origins = ["*"]
 
