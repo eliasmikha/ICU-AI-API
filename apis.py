@@ -9,7 +9,26 @@ tags_metadata = [
     {"name": "Root"}
 ]
 
-my_app = FastAPI(openapi_tags=tags_metadata)
+description = """
+ICU AI APIs will help you with your security cameras! 📷
+
+## Models
+
+you will be able to use:
+
+* **Fire Detection**.
+* **Motion Detection** (_not implemented yet_).
+* **Fall Detection** (_not implemented yet_).
+* **Face Recognition** (_not implemented yet_).
+* **Violence Detection** (_not implemented yet_).
+"""
+
+my_app = FastAPI(
+    title="ICU AI APIs",
+    description=description,
+    version="0.17.1",
+    openapi_tags=tags_metadata,
+    )
 
 origins = ["*"]
 
@@ -23,16 +42,16 @@ my_app.add_middleware(
 
 
 class BaseOptions(BaseModel):
-    fire: bool = False
-    face: bool = False
-    fall: bool = False
-    motion: bool = False
-    violence: bool = False
+    fire: Union[bool, None] = False
+    face: Union[bool, None] = False
+    fall: Union[bool, None] = False
+    motion: Union[bool, None] = False
+    violence: Union[bool, None] = False
 
 
 class BaseResponse(BaseModel):
+    cameraId: Union[int, None] = None
     predictions: BaseOptions
-    id: Union[int, None] = None
 
 
 class CameraRequest(BaseModel):
@@ -47,9 +66,9 @@ def root():
 
 
 @my_app.post('/api/Models/Predict', response_model=BaseResponse, tags=["Models"])
-def detect_fire(camera: CameraRequest = Body()):
+def models_prediction(camera: CameraRequest = Body()):
     response: BaseResponse = BaseResponse()
-    response.id = camera.id
+    response.cameraId = camera.id
 
     if camera.options.fire:
         prediction: bool = predict(camera.url)
