@@ -69,6 +69,7 @@ def root():
 def models_prediction(camera: CameraRequest = Body()):
     response: BaseResponse = BaseResponse()
     response.cameraId = camera.id
+    response.predictions = BaseOptions()
 
     if camera.options.fire:
         prediction: bool = predict(camera.url)
