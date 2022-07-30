@@ -26,7 +26,7 @@ you will be able to use:
 my_app = FastAPI(
     title="ICU AI APIs",
     description=description,
-    version="0.17.1",
+    version="0.17.3",
     openapi_tags=tags_metadata,
     )
 
@@ -66,10 +66,11 @@ def root():
 
 
 @my_app.post('/api/Models/Predict', response_model=BaseResponse, tags=["Models"])
-def models_prediction(camera: CameraRequest = Body()):
-    response: BaseResponse = BaseResponse()
-    response.cameraId = camera.id
-    response.predictions = BaseOptions()
+async def models_prediction(camera: CameraRequest = Body()):
+    response: BaseResponse = BaseResponse(
+        predictions=BaseOptions(),
+        cameraId=camera.id
+    )
 
     if camera.options.fire:
         prediction: bool = predict(camera.url)
