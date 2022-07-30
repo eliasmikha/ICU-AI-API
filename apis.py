@@ -19,9 +19,9 @@ you will be able to use:
 
 * **Fire Detection**.
 * **Fall Detection**.
+* **Violence Detection**.
 * **Motion Detection** (_not implemented yet_).
 * **Face Recognition** (_not implemented yet_).
-* **Violence Detection** (_not implemented yet_).
 """
 
 my_app = FastAPI(
