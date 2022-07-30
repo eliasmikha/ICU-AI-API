@@ -20,7 +20,7 @@ def load_Vmodel():
 
 def predict_violence(camera_url: str) -> bool:
     model = load_Vmodel()
-    model.load_weights("data/violence_w.h5")
+    model.load_weights("violence_w.h5")
 
     try:
         cap = cv.VideoCapture(camera_url)
