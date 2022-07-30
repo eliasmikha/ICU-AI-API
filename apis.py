@@ -1,4 +1,4 @@
-from ctypes import Union
+from typing import Union
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
