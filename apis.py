@@ -1,8 +1,9 @@
-from typing import Union
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from fire_detection_model2 import predict
+from models.fire_detection_model2 import predict_fire
+from models.fall_detection import predict_fall
+from data.objects import BaseOptions, BaseResponse, CameraRequest
+from models.violence_detection import predict_violence
 
 tags_metadata = [
     {"name": "Models", "description": "The AI models endpoint"},
@@ -17,8 +18,8 @@ ICU AI APIs will help you with your security cameras! 📷
 you will be able to use:
 
 * **Fire Detection**.
+* **Fall Detection**.
 * **Motion Detection** (_not implemented yet_).
-* **Fall Detection** (_not implemented yet_).
 * **Face Recognition** (_not implemented yet_).
 * **Violence Detection** (_not implemented yet_).
 """
@@ -26,9 +27,9 @@ you will be able to use:
 my_app = FastAPI(
     title="ICU AI APIs",
     description=description,
-    version="0.17.3",
+    version="0.18.0",
     openapi_tags=tags_metadata,
-    )
+)
 
 origins = ["*"]
 
@@ -39,25 +40,6 @@ my_app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-class BaseOptions(BaseModel):
-    fire: Union[bool, None] = False
-    face: Union[bool, None] = False
-    fall: Union[bool, None] = False
-    motion: Union[bool, None] = False
-    violence: Union[bool, None] = False
-
-
-class BaseResponse(BaseModel):
-    cameraId: Union[int, None] = None
-    predictions: BaseOptions
-
-
-class CameraRequest(BaseModel):
-    id: Union[int, None] = None
-    url: str
-    options: BaseOptions
 
 
 @my_app.get('/', tags=['Root'])
@@ -73,7 +55,15 @@ async def models_prediction(camera: CameraRequest = Body()):
     )
 
     if camera.options.fire:
-        prediction: bool = predict(camera.url)
+        prediction: bool = predict_fire(camera.url)
         response.predictions.fire = prediction
+
+    if camera.options.fall:
+        prediction: bool = predict_fall(camera.url)
+        response.predictions.fall = prediction
+    
+    if camera.options.violence:
+        prediction: bool = predict_violence(camera.url)
+        response.predictions.violence = prediction
 
     return response
