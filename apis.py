@@ -1,9 +1,9 @@
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.fire_detection_model2 import predict_fire
-from models.fall_detection import predict_fall
-from data.objects import BaseOptions, BaseResponse, CameraRequest
-from models.violence_detection import predict_violence
+from fire_detection_model2 import predict_fire
+from fall_detection import predict_fall
+from objects import BaseOptions, BaseResponse, CameraRequest
+from violence_detection import predict_violence
 
 tags_metadata = [
     {"name": "Models", "description": "The AI models endpoint"},
