@@ -1,9 +1,8 @@
-from typing import Union
-from fastapi import Body, FastAPI, Query
+from ctypes import Union
+from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from fire_detection_model2 import predict
-import numpy as np
 
 tags_metadata = [
     {"name": "Models", "description": "The AI models endpoint"},
@@ -22,24 +21,38 @@ my_app.add_middleware(
     allow_headers=["*"],
 )
 
-class FrameInput(BaseModel):
-    frame: list[list[list[int]]]
+
+class BaseOptions(BaseModel):
+    fire: bool = False
+    face: bool = False
+    fall: bool = False
+    motion: bool = False
+    violence: bool = False
+
 
 class BaseResponse(BaseModel):
-    predict: bool = False
-    processed_frame: FrameInput
+    predictions: BaseOptions
+    id: Union[int, None] = None
+
+
+class CameraRequest(BaseModel):
+    id: Union[int, None] = None
+    url: str
+    options: BaseOptions
 
 
 @my_app.get('/', tags=['Root'])
 def root():
-    return {"message": "hello world!mm"}
+    return {"message": "hello world!"}
 
 
-@my_app.post('/api/Models/FireDetection', response_model=BaseResponse, tags=["Models"])
-def detect_fire(frameIn: FrameInput = Body(description='The frame to be proccessed')):
-    prediction: bool = predict(frameIn.frame)
+@my_app.post('/api/Models/Predict', response_model=BaseResponse, tags=["Models"])
+def detect_fire(camera: CameraRequest = Body()):
+    response: BaseResponse = BaseResponse()
+    response.id = camera.id
 
-    return BaseResponse(
-        predict=prediction,
-        processed_frame=frameIn.frame,
-    )
+    if camera.options.fire:
+        prediction: bool = predict(camera.url)
+        response.predictions.fire = prediction
+
+    return response
