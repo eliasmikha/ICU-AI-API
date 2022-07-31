@@ -4,4 +4,4 @@ numpy>=1.22.0
 pydantic>=1.9.1
 tensorflow-cpu>=2.9.1
 uvicorn>=0.17.6
-python3-opencv
+opencv-python
