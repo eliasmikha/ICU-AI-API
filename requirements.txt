@@ -1,7 +1,7 @@
 fastapi>=0.79.0
 mediapipe>=0.8.10.1
 numpy>=1.22.0
-opencv-python-headless>=4.2.0.32
 pydantic>=1.9.1
 tensorflow-cpu>=2.9.1
 uvicorn>=0.17.6
+python3-opencv
