@@ -1,6 +1,6 @@
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fire_detection_model2 import predict_fire
+# from fire_detection_model2 import predict_fire
 from fall_detection import predict_fall
 from objects import BaseOptions, BaseResponse, CameraRequest
 from violence_detection import predict_violence
@@ -54,9 +54,9 @@ async def models_prediction(camera: CameraRequest = Body()):
         cameraId=camera.id
     )
 
-    if camera.options.fire:
-        prediction: bool = predict_fire(camera.url)
-        response.predictions.fire = prediction
+    # if camera.options.fire:
+    #     prediction: bool = predict_fire(camera.url)
+    #     response.predictions.fire = prediction
 
     if camera.options.fall:
         prediction: bool = predict_fall(camera.url)
