@@ -1,5 +1,6 @@
 fastapi
 mediapipe
+importlib
 numpy
 pydantic
 tensorflow-cpu
