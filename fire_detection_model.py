@@ -4,7 +4,8 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Input, Dropou
 import cv2 as cv
 import numpy as np
 
-def fire_model():
+
+def fire_model() -> Model:
     input_tensor = Input(shape=(112, 112, 3))
 
     base_model = InceptionV3(input_tensor=input_tensor, include_top=False)
@@ -20,15 +21,34 @@ def fire_model():
     return model
 
 
-def predict_fire(frameIn) -> bool:
-    model = fire_model()
-    model.load_weights("fire.h5")
-    frame = cv.flip(frameIn, 1)
+model = fire_model()
+model.load_weights("fire.h5")
+
+
+def predict_fire(camera_url: str) -> bool:
+    try:
+        cap = cv.VideoCapture(camera_url)
+    except:
+        return False
+
+    frame: np.ndarray = None
+
+    for i in range(10):
+        success, frame = cap.read()
+        if not success:
+            continue
+
+    if frame is None:
+        return False
+
+    cap.release()
+
+    frame = cv.flip(frame, 1)
     pr = cv.resize(frame, (112, 112), interpolation=cv.INTER_AREA)
     pr = cv.cvtColor(pr, cv.COLOR_BGR2RGB)
     pr = np.expand_dims(pr, axis=0) / 255
     probabilities = model.predict(pr)
 
     if probabilities >= 0.4:
-       return True
+        return True
     return False

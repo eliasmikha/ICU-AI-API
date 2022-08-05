@@ -1,24 +1,29 @@
 from typing import Union
+from numpy import double
 from pydantic import BaseModel
 
 
-class BaseOptions(BaseModel):
-    fire: Union[bool, None] = False
-    face: Union[bool, None] = False
-    fall: Union[bool, None] = False
-    motion: Union[bool, None] = False
-    violence: Union[bool, None] = False
+# class BaseOptions(BaseModel):
+#     fire: Union[bool, None] = False
+#     face: Union[bool, None] = False
+#     fall: Union[bool, None] = False
+#     motion: Union[bool, None] = False
+#     violence: Union[bool, None] = False
 
 
 class BaseResponse(BaseModel):
-    cameraId: Union[int, None] = None
-    predictions: BaseOptions
+    camid: Union[int, None] = None
+    fire: bool = False
+    fall: bool = False
+    motion: bool = False
+    violence: bool = False
+    faces: list[list[double]] = []
 
 
 class CameraRequest(BaseModel):
-    id: Union[int, None] = None
-    url: str
-    options: BaseOptions
+    id: Union[str, None] = None
+    url: Union[str, None] = None
+    name: Union[str, None] = None
 
 
 class BaseError(BaseModel):

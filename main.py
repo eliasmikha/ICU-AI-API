@@ -1,9 +1,12 @@
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fire_detection_model2 import predict_fire
+from face_recognition import predict_faces
+from fire_detection_model import predict_fire
 from fall_detection import predict_fall
 from objects import BaseOptions, BaseResponse, CameraRequest
 from violence_detection import predict_violence
+from motion_detection import predict_motion
+
 
 tags_metadata = [
     {"name": "Models", "description": "The AI models endpoint"},
@@ -20,14 +23,14 @@ you will be able to use:
 * **Fire Detection**.
 * **Fall Detection**.
 * **Violence Detection**.
-* **Motion Detection** (_not implemented yet_).
-* **Face Recognition** (_not implemented yet_).
+* **Motion Detection**.
+* **Face Recognition**.
 """
 
 my_app = FastAPI(
     title="ICU AI APIs",
     description=description,
-    version="0.18.0",
+    version="0.20.1",
     openapi_tags=tags_metadata,
 )
 
@@ -50,20 +53,17 @@ def root():
 @my_app.post('/api/Models/Predict', response_model=BaseResponse, tags=["Models"])
 async def models_prediction(camera: CameraRequest = Body()):
     response: BaseResponse = BaseResponse(
-        predictions=BaseOptions(),
-        cameraId=camera.id
+        camid=camera.id,
     )
 
-    if camera.options.fire:
-        prediction: bool = predict_fire(camera.url)
-        response.predictions.fire = prediction
+    response.fire = predict_fire(camera.url)
 
-    if camera.options.fall:
-        prediction: bool = predict_fall(camera.url)
-        response.predictions.fall = prediction
-    
-    if camera.options.violence:
-        prediction: bool = predict_violence(camera.url)
-        response.predictions.violence = prediction
+    response.fall = predict_fall(camera.url)
+
+    response.violence = predict_violence(camera.url)
+
+    response.motion = predict_motion(camera.url)
+
+    response.faces = predict_faces(camera.url)
 
     return response
