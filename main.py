@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from face_recognition import predict_faces
 from fire_detection_model import predict_fire
 from fall_detection import predict_fall
-from objects import BaseOptions, BaseResponse, CameraRequest
+from objects import BaseResponse, CameraRequest
 from violence_detection import predict_violence
 from motion_detection import predict_motion
 
