@@ -1,8 +1,7 @@
-from numpy import double
 import face_recognition as fg
 import cv2 as cv
 
-def predict_faces(camera_url: str) -> list[list[double]]:
+def predict_faces(camera_url: str) -> list[list]:
     try:
         cap = cv.VideoCapture(camera_url)
         cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)
