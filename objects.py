@@ -17,7 +17,7 @@ class BaseResponse(BaseModel):
     fall: bool = False
     motion: bool = False
     violence: bool = False
-    faces: list[list] = []
+    faces: list = []
 
 
 class CameraRequest(BaseModel):
