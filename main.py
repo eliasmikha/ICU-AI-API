@@ -6,6 +6,7 @@ from fall_detection import predict_fall
 from objects import BaseResponse, CameraRequest
 from violence_detection import predict_violence
 from motion_detection import predict_motion
+import requests
 
 
 tags_metadata = [
@@ -36,6 +37,8 @@ my_app = FastAPI(
 
 origins = ["*"]
 
+AUTH_URL: str = 'https://auth-icu.herokuapp.com/api/ai/newfaces'
+
 my_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -50,7 +53,7 @@ def root():
     return {"message": "hello world!"}
 
 
-@my_app.post('/api/Models/Predict', response_model=BaseResponse, tags=["Models"])
+@my_app.post('/api/Models/Predict', tags=["Models"])
 async def models_prediction(camera: CameraRequest = Body()):
     response: BaseResponse = BaseResponse(
         camid=camera.id,
@@ -66,4 +69,4 @@ async def models_prediction(camera: CameraRequest = Body()):
 
     response.faces = predict_faces(camera.url)
 
-    return response
+    requests.post(AUTH_URL, json=response.json())
