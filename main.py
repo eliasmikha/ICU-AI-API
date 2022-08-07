@@ -1,10 +1,10 @@
 from fastapi import Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from face_recognition import predict_faces
-from fire_detection_model import predict_fire
+from fire_detection_model import fire_model, predict_fire
 from fall_detection import predict_fall
 from objects import BaseResponse, CameraRequest
-from violence_detection import predict_violence
+from violence_detection import load_Vmodel, predict_violence
 from motion_detection import predict_motion
 import requests
 
@@ -47,6 +47,12 @@ my_app.add_middleware(
     allow_headers=["*"],
 )
 
+FIRE_MODEL = fire_model()
+FIRE_MODEL.load_weights("fire.h5")
+
+VIOLENCE_MODEL = load_Vmodel()
+VIOLENCE_MODEL.load_weights("violence_w.h5")
+
 
 @my_app.get('/', tags=['Root'])
 def root():
@@ -59,11 +65,11 @@ async def models_prediction(camera: CameraRequest = Body()):
         camid=camera.id,
     )
 
-    response.fire = predict_fire(camera.url)
+    response.fire = predict_fire(model=FIRE_MODEL, camera_url=camera.url)
 
     response.fall = predict_fall(camera.url)
 
-    response.violence = predict_violence(camera.url)
+    response.violence = predict_violence(model=VIOLENCE_MODEL, camera_url=camera.url)
 
     response.motion = predict_motion(camera.url)
 

@@ -1,5 +1,4 @@
 from typing import Union
-from numpy import double
 from pydantic import BaseModel
 
 
@@ -12,7 +11,7 @@ from pydantic import BaseModel
 
 
 class BaseResponse(BaseModel):
-    camid: Union[int, None] = None
+    camid: Union[str, None] = None
     fire: bool = False
     fall: bool = False
     motion: bool = False

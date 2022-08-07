@@ -9,13 +9,13 @@ def predict_fall(camera_url: str) -> bool:
     pose = mpPose.Pose()
     try:
         cap = cv.VideoCapture(camera_url)
+        cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)
+        cap.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
     except:
         return False
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
     frame: np.ndarray = None
 
-    for i in range(10):
+    for i in range(5):
         success, frame = cap.read()
         if success is False:
             continue

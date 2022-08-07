@@ -11,7 +11,7 @@ def predict_motion(camera_url: str) -> bool:
     pframe = None
     motion = False
 
-    for i in range(10):
+    for i in range(5):
         success, frame = cap.read()
         if not success:
             continue

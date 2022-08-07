@@ -21,11 +21,7 @@ def fire_model() -> Model:
     return model
 
 
-model = fire_model()
-model.load_weights("fire.h5")
-
-
-def predict_fire(camera_url: str) -> bool:
+def predict_fire(model: Model, camera_url: str) -> bool:
     try:
         cap = cv.VideoCapture(camera_url)
     except:
@@ -33,7 +29,7 @@ def predict_fire(camera_url: str) -> bool:
 
     frame: np.ndarray = None
 
-    for i in range(10):
+    for i in range(5):
         success, frame = cap.read()
         if not success:
             continue
@@ -49,6 +45,6 @@ def predict_fire(camera_url: str) -> bool:
     pr = np.expand_dims(pr, axis=0) / 255
     probabilities = model.predict(pr)
 
-    if probabilities >= 0.4:
+    if probabilities >= 0.6:
         return True
     return False

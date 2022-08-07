@@ -18,21 +18,17 @@ def load_Vmodel():
     return V_model
 
 
-def predict_violence(camera_url: str) -> bool:
-    model = load_Vmodel()
-    model.load_weights("violence_w.h5")
-
+def predict_violence(model: Model, camera_url: str) -> bool:
     try:
         cap = cv.VideoCapture(camera_url)
+        cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)
+        cap.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
     except:
         return False
 
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
-
     frame: np.ndarray = None
 
-    for i in range(10):
+    for i in range(5):
         success, frame = cap.read()
 
         if success is False:
@@ -49,7 +45,7 @@ def predict_violence(camera_url: str) -> bool:
     cap.release()
 
     probabilities = model.predict(pr)
-    if probabilities > 0.5:
+    if probabilities >= 0.6:
         return True
     else:
         return False
